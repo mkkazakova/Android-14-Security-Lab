@@ -1,0 +1,217 @@
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.13/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+> Task :lab:preBuild UP-TO-DATE
+> Task :lab:preDebugBuild UP-TO-DATE
+> Task :lab:mergeDebugNativeDebugMetadata NO-SOURCE
+> Task :common:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :common:preBuild UP-TO-DATE
+> Task :common:preDebugBuild UP-TO-DATE
+> Task :common:generateDebugBuildConfig UP-TO-DATE
+> Task :common:generateDebugResValues UP-TO-DATE
+> Task :common:generateDebugResources UP-TO-DATE
+> Task :common:packageDebugResources UP-TO-DATE
+> Task :common:processDebugNavigationResources UP-TO-DATE
+> Task :common:parseDebugLocalResources UP-TO-DATE
+> Task :common:generateDebugRFile UP-TO-DATE
+> Task :common:compileDebugKotlin UP-TO-DATE
+> Task :common:javaPreCompileDebug UP-TO-DATE
+> Task :common:compileDebugJavaWithJavac UP-TO-DATE
+> Task :common:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :lab:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :lab:generateDebugBuildConfig UP-TO-DATE
+> Task :common:compileDebugLibraryResources UP-TO-DATE
+> Task :common:writeDebugAarMetadata UP-TO-DATE
+> Task :lab:checkDebugAarMetadata UP-TO-DATE
+> Task :lab:processDebugNavigationResources
+> Task :lab:compileDebugNavigationResources UP-TO-DATE
+> Task :lab:generateDebugResValues UP-TO-DATE
+> Task :lab:mapDebugSourceSetPaths
+> Task :lab:generateDebugResources
+> Task :lab:packageDebugResources
+> Task :lab:createDebugCompatibleScreenManifests UP-TO-DATE
+> Task :common:extractDeepLinksDebug UP-TO-DATE
+> Task :lab:mergeDebugResources
+> Task :common:processDebugManifest UP-TO-DATE
+> Task :lab:extractDeepLinksDebug UP-TO-DATE
+> Task :lab:processDebugMainManifest UP-TO-DATE
+> Task :lab:processDebugManifest UP-TO-DATE
+> Task :lab:processDebugManifestForPackage UP-TO-DATE
+> Task :lab:javaPreCompileDebug UP-TO-DATE
+> Task :common:mergeDebugShaders UP-TO-DATE
+> Task :common:compileDebugShaders NO-SOURCE
+> Task :common:generateDebugAssets UP-TO-DATE
+> Task :common:mergeDebugAssets UP-TO-DATE
+> Task :lab:mergeDebugShaders UP-TO-DATE
+> Task :lab:compileDebugShaders NO-SOURCE
+> Task :lab:generateDebugAssets UP-TO-DATE
+> Task :lab:mergeDebugAssets UP-TO-DATE
+> Task :lab:compressDebugAssets UP-TO-DATE
+> Task :lab:parseDebugLocalResources
+> Task :common:bundleLibRuntimeToJarDebug UP-TO-DATE
+> Task :lab:desugarDebugFileDependencies UP-TO-DATE
+> Task :common:processDebugJavaRes UP-TO-DATE
+> Task :lab:checkDebugDuplicateClasses UP-TO-DATE
+> Task :lab:mergeExtDexDebug UP-TO-DATE
+> Task :common:bundleLibRuntimeToDirDebug UP-TO-DATE
+> Task :common:mergeDebugJniLibFolders UP-TO-DATE
+> Task :lab:mergeLibDexDebug UP-TO-DATE
+> Task :common:mergeDebugNativeLibs NO-SOURCE
+> Task :common:copyDebugJniLibsProjectOnly UP-TO-DATE
+> Task :lab:mergeDebugJniLibFolders UP-TO-DATE
+> Task :lab:mergeDebugNativeLibs NO-SOURCE
+> Task :lab:stripDebugDebugSymbols NO-SOURCE
+> Task :lab:validateSigningDebug UP-TO-DATE
+> Task :lab:writeDebugAppMetadata UP-TO-DATE
+> Task :lab:writeDebugSigningConfigVersions UP-TO-DATE
+> Task :helper:preBuild UP-TO-DATE
+> Task :helper:preDebugBuild UP-TO-DATE
+> Task :helper:mergeDebugNativeDebugMetadata NO-SOURCE
+> Task :helper:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :helper:generateDebugBuildConfig UP-TO-DATE
+> Task :helper:checkDebugAarMetadata UP-TO-DATE
+> Task :helper:processDebugNavigationResources UP-TO-DATE
+> Task :helper:compileDebugNavigationResources UP-TO-DATE
+> Task :helper:generateDebugResValues UP-TO-DATE
+> Task :helper:mapDebugSourceSetPaths UP-TO-DATE
+> Task :helper:generateDebugResources UP-TO-DATE
+> Task :helper:mergeDebugResources UP-TO-DATE
+> Task :helper:packageDebugResources UP-TO-DATE
+> Task :helper:parseDebugLocalResources UP-TO-DATE
+> Task :helper:createDebugCompatibleScreenManifests UP-TO-DATE
+> Task :helper:extractDeepLinksDebug UP-TO-DATE
+> Task :helper:processDebugMainManifest UP-TO-DATE
+> Task :helper:processDebugManifest UP-TO-DATE
+> Task :helper:processDebugManifestForPackage UP-TO-DATE
+> Task :helper:processDebugResources UP-TO-DATE
+> Task :lab:processDebugResources
+> Task :helper:javaPreCompileDebug UP-TO-DATE
+> Task :helper:mergeDebugShaders UP-TO-DATE
+> Task :helper:compileDebugShaders NO-SOURCE
+> Task :helper:generateDebugAssets UP-TO-DATE
+> Task :helper:mergeDebugAssets UP-TO-DATE
+> Task :helper:compressDebugAssets UP-TO-DATE
+> Task :helper:desugarDebugFileDependencies UP-TO-DATE
+> Task :helper:checkDebugDuplicateClasses UP-TO-DATE
+> Task :helper:mergeExtDexDebug UP-TO-DATE
+> Task :helper:mergeLibDexDebug UP-TO-DATE
+> Task :helper:mergeDebugJniLibFolders UP-TO-DATE
+> Task :helper:mergeDebugNativeLibs NO-SOURCE
+> Task :helper:stripDebugDebugSymbols NO-SOURCE
+> Task :helper:validateSigningDebug UP-TO-DATE
+> Task :helper:writeDebugAppMetadata UP-TO-DATE
+> Task :helper:writeDebugSigningConfigVersions UP-TO-DATE
+> Task :common:checkDebugAarMetadata UP-TO-DATE
+> Task :common:stripDebugDebugSymbols NO-SOURCE
+> Task :common:copyDebugJniLibsProjectAndLocalJars UP-TO-DATE
+> Task :common:extractDebugAnnotations UP-TO-DATE
+> Task :common:extractDeepLinksForAarDebug UP-TO-DATE
+> Task :common:mergeDebugGeneratedProguardFiles UP-TO-DATE
+> Task :common:mergeDebugConsumerProguardFiles UP-TO-DATE
+> Task :common:prepareDebugArtProfile UP-TO-DATE
+> Task :common:prepareLintJarForPublish UP-TO-DATE
+> Task :common:mergeDebugJavaResource UP-TO-DATE
+> Task :common:syncDebugLibJars UP-TO-DATE
+> Task :common:bundleDebugLocalLintAar UP-TO-DATE
+> Task :common:createFullJarDebug UP-TO-DATE
+> Task :common:preDebugAndroidTestBuild UP-TO-DATE
+> Task :common:generateDebugAndroidTestResValues UP-TO-DATE
+> Task :common:writeDebugLintModelMetadata UP-TO-DATE
+> Task :common:generateDebugAndroidTestLintModel UP-TO-DATE
+> Task :common:extractProguardFiles UP-TO-DATE
+> Task :common:generateDebugLintModel UP-TO-DATE
+> Task :common:preDebugUnitTestBuild UP-TO-DATE
+> Task :common:generateDebugUnitTestLintModel UP-TO-DATE
+> Task :common:lintAnalyzeDebug UP-TO-DATE
+> Task :common:lintAnalyzeDebugAndroidTest UP-TO-DATE
+> Task :common:lintAnalyzeDebugUnitTest UP-TO-DATE
+> Task :lab:preDebugAndroidTestBuild SKIPPED
+> Task :lab:generateDebugAndroidTestResValues UP-TO-DATE
+> Task :lab:extractProguardFiles UP-TO-DATE
+> Task :lab:preDebugUnitTestBuild UP-TO-DATE
+> Task :helper:preDebugAndroidTestBuild SKIPPED
+> Task :helper:generateDebugAndroidTestResValues UP-TO-DATE
+> Task :helper:extractProguardFiles UP-TO-DATE
+> Task :helper:preDebugUnitTestBuild UP-TO-DATE
+> Task :sample:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :sample:preBuild UP-TO-DATE
+> Task :sample:preDebugBuild UP-TO-DATE
+> Task :sample:generateDebugBuildConfig UP-TO-DATE
+> Task :sample:checkDebugAarMetadata UP-TO-DATE
+> Task :sample:processDebugNavigationResources UP-TO-DATE
+> Task :sample:compileDebugNavigationResources UP-TO-DATE
+> Task :sample:generateDebugResValues UP-TO-DATE
+> Task :sample:mapDebugSourceSetPaths UP-TO-DATE
+> Task :sample:generateDebugResources UP-TO-DATE
+> Task :sample:mergeDebugResources UP-TO-DATE
+> Task :sample:packageDebugResources UP-TO-DATE
+> Task :sample:parseDebugLocalResources UP-TO-DATE
+> Task :sample:createDebugCompatibleScreenManifests UP-TO-DATE
+> Task :sample:extractDeepLinksDebug UP-TO-DATE
+> Task :sample:processDebugMainManifest UP-TO-DATE
+> Task :sample:processDebugManifest UP-TO-DATE
+> Task :sample:processDebugManifestForPackage UP-TO-DATE
+> Task :sample:processDebugResources UP-TO-DATE
+> Task :sample:compileDebugKotlin UP-TO-DATE
+> Task :sample:javaPreCompileDebug UP-TO-DATE
+> Task :sample:compileDebugJavaWithJavac UP-TO-DATE
+> Task :sample:bundleDebugClassesToCompileJar UP-TO-DATE
+> Task :sample:preDebugAndroidTestBuild SKIPPED
+> Task :sample:generateDebugAndroidTestResValues UP-TO-DATE
+> Task :sample:generateDebugAndroidTestLintModel UP-TO-DATE
+> Task :sample:extractProguardFiles UP-TO-DATE
+> Task :sample:generateDebugLintReportModel UP-TO-DATE
+> Task :sample:preDebugUnitTestBuild UP-TO-DATE
+> Task :sample:generateDebugUnitTestLintModel UP-TO-DATE
+> Task :sample:lintAnalyzeDebug UP-TO-DATE
+> Task :sample:lintAnalyzeDebugAndroidTest UP-TO-DATE
+> Task :sample:lintAnalyzeDebugUnitTest UP-TO-DATE
+> Task :sample:lintReportDebug UP-TO-DATE
+> Task :sample:lintDebug
+> Task :helper:compileDebugKotlin
+> Task :helper:compileDebugJavaWithJavac UP-TO-DATE
+> Task :lab:compileDebugKotlin
+> Task :helper:dexBuilderDebug
+> Task :lab:compileDebugJavaWithJavac UP-TO-DATE
+> Task :lab:dexBuilderDebug
+> Task :lab:mergeDebugGlobalSynthetics UP-TO-DATE
+> Task :lab:processDebugJavaRes UP-TO-DATE
+> Task :lab:mergeDebugJavaResource UP-TO-DATE
+> Task :helper:mergeDebugGlobalSynthetics UP-TO-DATE
+> Task :helper:processDebugJavaRes UP-TO-DATE
+> Task :helper:mergeDebugJavaResource UP-TO-DATE
+> Task :lab:bundleDebugClassesToCompileJar
+> Task :lab:generateDebugLintReportModel
+> Task :helper:mergeProjectDexDebug
+> Task :lab:mergeProjectDexDebug
+> Task :lab:generateDebugAndroidTestLintModel
+> Task :lab:generateDebugUnitTestLintModel
+> Task :helper:bundleDebugClassesToCompileJar
+> Task :helper:generateDebugLintReportModel
+> Task :helper:generateDebugAndroidTestLintModel
+> Task :helper:generateDebugUnitTestLintModel
+> Task :lab:packageDebug
+> Task :lab:createDebugApkListingFileRedirect UP-TO-DATE
+> Task :lab:assembleDebug
+> Task :helper:packageDebug
+> Task :helper:createDebugApkListingFileRedirect UP-TO-DATE
+> Task :helper:assembleDebug
+> Task :lab:lintAnalyzeDebugAndroidTest
+> Task :lab:lintAnalyzeDebugUnitTest
+> Task :helper:lintAnalyzeDebugAndroidTest
+> Task :helper:lintAnalyzeDebugUnitTest
+> Task :helper:lintAnalyzeDebug
+> Task :lab:lintAnalyzeDebug
+
+> Task :lab:lintReportDebug
+Wrote HTML report to file:///workspace/scratch/df22305ff8b4/android-security-lab/lab/build/reports/lint-results-debug.html
+
+> Task :lab:lintDebug
+
+> Task :helper:lintReportDebug
+Wrote HTML report to file:///workspace/scratch/df22305ff8b4/android-security-lab/helper/build/reports/lint-results-debug.html
+
+> Task :helper:lintDebug
+w: Detected multiple Kotlin daemon sessions at 
+
+BUILD SUCCESSFUL in 28s
+169 actionable tasks: 34 executed, 135 up-to-date

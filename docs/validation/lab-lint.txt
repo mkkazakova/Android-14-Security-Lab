@@ -1,0 +1,87 @@
+/workspace/scratch/df22305ff8b4/android-security-lab/lab/src/main/java/ru/securitylab/lab/BootProbe.kt:21: Warning: Consider using apply() instead; commit writes its data to persistent storage immediately, whereas apply will handle it in the background [ApplySharedPref]
+            .putString("de_hash",Evidence.sha(de)).putString("ce_hash",Evidence.sha(ce)).commit()
+                                                                                         ~~~~~~~~
+/workspace/scratch/df22305ff8b4/android-security-lab/lab/src/main/java/ru/securitylab/lab/BootProbe.kt:36: Warning: Consider using apply() instead; commit writes its data to persistent storage immediately, whereas apply will handle it in the background [ApplySharedPref]
+        p.edit().putString("history",history.toString()).commit()
+                                                         ~~~~~~~~
+
+   Explanation for issues of type "ApplySharedPref":
+   Consider using apply() instead of commit on shared preferences. Whereas
+   commit blocks and writes its data to persistent storage immediately, apply
+   will handle it in the background.
+
+/workspace/scratch/df22305ff8b4/android-security-lab/lab/build.gradle.kts:10: Warning: Not targeting the latest versions of Android; compatibility modes apply. Consider testing and updating this version. Consult the android.os.Build.VERSION_CODES javadoc for details. [OldTargetApi]
+        targetSdk = 34
+        ~~~~~~~~~~~~~~
+
+   Explanation for issues of type "OldTargetApi":
+   When your application or sdk runs on a version of Android that is more
+   recent than your targetSdkVersion specifies that it has been tested with,
+   various compatibility modes kick in. This ensures that your application
+   continues to work, but it may look out of place. For example, if the
+   targetSdkVersion is less than 14, your app may get an option button in the
+   UI.
+
+   To fix this issue, set the targetSdkVersion to the highest available value.
+   Then test your app to make sure everything works correctly. You may want to
+   consult the compatibility notes to see what changes apply to each version
+   you are adding support for:
+   https://developer.android.com/reference/android/os/Build.VERSION_CODES.html
+   as well as follow this guide:
+   https://developer.android.com/distribute/best-practices/develop/target-sdk.
+   html
+
+   https://developer.android.com/distribute/best-practices/develop/target-sdk.html
+
+/workspace/scratch/df22305ff8b4/android-security-lab/lab/build.gradle.kts:4: Warning: A newer version of compileSdkVersion than 34 is available: 36 [GradleDependency]
+    compileSdk = 34
+    ~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "GradleDependency":
+   This detector looks for usages of libraries where the version you are using
+   is not the current stable release. Using older versions is fine, and there
+   are cases where you deliberately want to stick with an older version.
+   However, you may simply not be aware that a more recent version is
+   available, and that is what this lint check helps find.
+
+/workspace/scratch/df22305ff8b4/android-security-lab/lab/src/main/AndroidManifest.xml:6: Warning: The attribute android:allowBackup is deprecated from Android 12 and may be removed in future versions. Consider adding the attribute android:dataExtractionRules specifying an @xml resource which configures backups and device transfers on Android 12 and higher. [DataExtractionRules]
+    <application android:icon="@drawable/ic_lab" android:label="Security Lab" android:theme="@style/LabTheme" android:allowBackup="false" android:networkSecurityConfig="@xml/network_security_config">
+                                                                                                                                   ~~~~~
+
+   Explanation for issues of type "DataExtractionRules":
+   Before Android 12, the attributes android:allowBackup and
+   android:fullBackupContent were used to configure all forms of backup,
+   including cloud backups, device-to-device transfers and adb backup.
+
+   In Android 12 and higher, these attributes have been deprecated and will
+   only apply to cloud backups. You should instead use the attribute
+   android:dataExtractionRules, specifying an @xml resource that configures
+   which files to back up, for cloud backups and for device-to-device
+   transfers, separately. If your minSdkVersion supports older versions,
+   you'll still want to specify an android:fullBackupContent resource if the
+   default behavior is not right for your app.
+
+   https://developer.android.com/about/versions/12/backup-restore#xml-changes
+   https://goo.gle/DataExtractionRules
+
+/workspace/scratch/df22305ff8b4/android-security-lab/lab/src/main/java/ru/securitylab/lab/MainActivity.kt:105: Warning: Do not concatenate text displayed with setText. Use resource string with placeholders. [SetTextI18n]
+                tapLabel?.text="Сохранено записей: $tapCount"
+                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/scratch/df22305ff8b4/android-security-lab/lab/src/main/java/ru/securitylab/lab/MainActivity.kt:123: Warning: Do not concatenate text displayed with setText. Use resource string with placeholders. [SetTextI18n]
+            val tick=object:Runnable{override fun run(){if(current=="capture" && clock.isAttachedToWindow){clock.text="Время кадра: "+android.os.SystemClock.elapsedRealtime();ticker.postDelayed(this,200)}}}
+                                                                                                                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "SetTextI18n":
+   When calling TextView#setText
+   * Never call Number#toString() to format numbers; it will not handle
+   fraction separators and locale-specific digits properly. Consider using
+   String#format with proper format specifications (%d or %f) instead.
+   * Do not pass a string literal (e.g. "Hello") to display text. Hardcoded
+   text can not be properly translated to other languages. Consider using
+   Android resource strings instead.
+   * Do not build messages by concatenating text chunks. Such messages can not
+   be properly translated.
+
+   https://developer.android.com/guide/topics/resources/localization.html
+
+0 errors, 7 warnings

@@ -1,0 +1,32 @@
+{
+  "security-lab.apk": {
+    "package": "ru.securitylab.lab",
+    "version": 1,
+    "certificate_sha256": "3de3d16a63d4f122cc201d359828564e969c30fe33d2452bc66af12f58debba9",
+    "apk_sha256": "604485b36f011a01f309b86da679d9687add3010abb97e70182af76bdd0a9049"
+  },
+  "lab-helper.apk": {
+    "package": "ru.securitylab.helper",
+    "version": 1,
+    "certificate_sha256": "3de3d16a63d4f122cc201d359828564e969c30fe33d2452bc66af12f58debba9",
+    "apk_sha256": "f5138b5a6ac421c074e97d70093d49fb18d6d6cd66adffb69e6daf5303c3b365"
+  },
+  "sample-v1-a.apk": {
+    "package": "ru.securitylab.sample",
+    "version": 1,
+    "certificate_sha256": "35abbbf461d66f8b032701e3a8160a6da6644472bdfa449e4e86b4804c855737",
+    "apk_sha256": "f2f6dc0f0304394fe7c7ad2f796013c8add5a5fc39b65e2d448070c2c2746a85"
+  },
+  "sample-v2-a.apk": {
+    "package": "ru.securitylab.sample",
+    "version": 2,
+    "certificate_sha256": "35abbbf461d66f8b032701e3a8160a6da6644472bdfa449e4e86b4804c855737",
+    "apk_sha256": "2223b2d1a9a25be2fe437fd1b7d394dc4ce504a968ac623ded6a26ccf33b02f1"
+  },
+  "sample-v2-b.apk": {
+    "package": "ru.securitylab.sample",
+    "version": 2,
+    "certificate_sha256": "bbc29a96f4a98533d8f030c153c55238aae230539c39b65d3ac71924f53797a4",
+    "apk_sha256": "7b5712612e3390e114519948cb8ea553bd2b47880c8735d6c7e5d3e3261671fe"
+  }
+}

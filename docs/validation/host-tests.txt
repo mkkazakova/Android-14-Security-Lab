@@ -1,0 +1,18 @@
+test_ca_and_names_are_independent (test_fixtures.FixtureTests.test_ca_and_names_are_independent) ... ok
+test_real_tls_positive_and_negative_controls (test_fixtures.FixtureTests.test_real_tls_positive_and_negative_controls) ... ok
+test_current_image_is_included (test_reporting.ReportingTests.test_current_image_is_included) ... ok
+test_escape_runtime_text (test_reporting.ReportingTests.test_escape_runtime_text) ... ok
+test_missing_results_never_pass (test_reporting.ReportingTests.test_missing_results_never_pass) ... ok
+test_modified_image_is_error (test_reporting.ReportingTests.test_modified_image_is_error) ... ok
+test_no_events_cannot_pass (test_reporting.ReportingTests.test_no_events_cannot_pass) ... ok
+test_old_run_image_is_error (test_reporting.ReportingTests.test_old_run_image_is_error) ... ok
+test_previous_workflow_run_is_error (test_reporting.ReportingTests.test_previous_workflow_run_is_error) ... ok
+test_stale_commit_is_error (test_reporting.ReportingTests.test_stale_commit_is_error) ... ok
+test_assertion_and_inconclusive_are_distinct (test_runner.RunnerTests.test_assertion_and_inconclusive_are_distinct) ... ok
+test_existing_run_directory_is_rejected (test_runner.RunnerTests.test_existing_run_directory_is_rejected) ... ok
+test_independent_experiment_runs_after_infrastructure_error (test_runner.RunnerTests.test_independent_experiment_runs_after_infrastructure_error) ... ok
+
+----------------------------------------------------------------------
+Ran 13 tests in 1.189s
+
+OK

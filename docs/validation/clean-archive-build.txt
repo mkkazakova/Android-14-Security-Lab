@@ -1,0 +1,331 @@
+Generated disposable CA, TLS fixtures and two independent APK signers.
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.13/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+> Task :lab:preBuild UP-TO-DATE
+> Task :lab:preDebugBuild UP-TO-DATE
+> Task :lab:mergeDebugNativeDebugMetadata NO-SOURCE
+> Task :common:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :common:preBuild UP-TO-DATE
+> Task :common:preDebugBuild UP-TO-DATE
+> Task :common:generateDebugBuildConfig
+> Task :common:generateDebugResValues
+> Task :common:generateDebugResources
+> Task :common:packageDebugResources
+> Task :common:processDebugNavigationResources
+> Task :lab:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :common:javaPreCompileDebug
+> Task :lab:generateDebugBuildConfig
+> Task :common:compileDebugLibraryResources
+> Task :common:writeDebugAarMetadata
+> Task :lab:processDebugNavigationResources
+> Task :common:parseDebugLocalResources
+> Task :lab:checkDebugAarMetadata
+> Task :lab:generateDebugResValues
+> Task :lab:compileDebugNavigationResources
+> Task :lab:mapDebugSourceSetPaths
+> Task :common:generateDebugRFile
+> Task :lab:generateDebugResources
+> Task :lab:packageDebugResources
+> Task :lab:createDebugCompatibleScreenManifests
+> Task :common:extractDeepLinksDebug
+> Task :lab:parseDebugLocalResources
+> Task :lab:extractDeepLinksDebug
+> Task :lab:javaPreCompileDebug
+> Task :lab:mergeDebugResources
+> Task :common:mergeDebugShaders
+> Task :common:compileDebugShaders NO-SOURCE
+> Task :common:generateDebugAssets UP-TO-DATE
+> Task :common:mergeDebugAssets
+> Task :lab:mergeDebugShaders
+> Task :lab:compileDebugShaders NO-SOURCE
+> Task :lab:generateDebugAssets UP-TO-DATE
+> Task :common:processDebugManifest
+> Task :lab:mergeDebugAssets
+> Task :lab:processDebugMainManifest
+> Task :lab:processDebugManifest
+> Task :lab:compressDebugAssets
+> Task :lab:desugarDebugFileDependencies
+> Task :common:mergeDebugJniLibFolders
+> Task :common:mergeDebugNativeLibs NO-SOURCE
+> Task :lab:checkDebugDuplicateClasses
+> Task :common:copyDebugJniLibsProjectOnly
+> Task :lab:mergeDebugJniLibFolders
+> Task :lab:mergeDebugNativeLibs NO-SOURCE
+> Task :lab:stripDebugDebugSymbols NO-SOURCE
+> Task :lab:validateSigningDebug
+> Task :lab:writeDebugAppMetadata
+> Task :lab:writeDebugSigningConfigVersions
+> Task :helper:preBuild UP-TO-DATE
+> Task :helper:preDebugBuild UP-TO-DATE
+> Task :helper:mergeDebugNativeDebugMetadata NO-SOURCE
+> Task :helper:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :helper:generateDebugBuildConfig
+> Task :helper:checkDebugAarMetadata
+> Task :helper:processDebugNavigationResources
+> Task :helper:compileDebugNavigationResources
+> Task :helper:generateDebugResValues
+> Task :helper:mapDebugSourceSetPaths
+> Task :helper:generateDebugResources
+> Task :helper:mergeDebugResources
+> Task :helper:packageDebugResources
+> Task :helper:createDebugCompatibleScreenManifests
+> Task :helper:extractDeepLinksDebug
+> Task :helper:parseDebugLocalResources
+> Task :helper:processDebugMainManifest
+> Task :helper:processDebugManifest
+> Task :lab:processDebugManifestForPackage
+> Task :helper:processDebugManifestForPackage
+> Task :helper:javaPreCompileDebug
+> Task :helper:mergeDebugShaders
+> Task :helper:compileDebugShaders NO-SOURCE
+> Task :helper:generateDebugAssets UP-TO-DATE
+> Task :helper:mergeDebugAssets
+> Task :helper:compressDebugAssets
+> Task :helper:desugarDebugFileDependencies
+> Task :helper:checkDebugDuplicateClasses
+> Task :helper:mergeDebugJniLibFolders
+> Task :helper:mergeDebugNativeLibs NO-SOURCE
+> Task :helper:stripDebugDebugSymbols NO-SOURCE
+> Task :helper:validateSigningDebug
+> Task :helper:writeDebugAppMetadata
+> Task :helper:writeDebugSigningConfigVersions
+> Task :sample:preBuild UP-TO-DATE
+> Task :sample:preDebugBuild UP-TO-DATE
+> Task :sample:mergeDebugNativeDebugMetadata NO-SOURCE
+> Task :sample:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :sample:generateDebugBuildConfig
+> Task :sample:checkDebugAarMetadata
+> Task :sample:processDebugNavigationResources
+> Task :lab:processDebugResources
+> Task :helper:processDebugResources
+> Task :sample:compileDebugNavigationResources
+> Task :sample:generateDebugResValues
+> Task :sample:mapDebugSourceSetPaths
+> Task :sample:generateDebugResources
+> Task :sample:mergeDebugResources
+> Task :sample:packageDebugResources
+> Task :sample:createDebugCompatibleScreenManifests
+> Task :sample:extractDeepLinksDebug
+> Task :sample:parseDebugLocalResources
+> Task :sample:processDebugMainManifest
+> Task :sample:processDebugManifest
+> Task :sample:processDebugManifestForPackage
+> Task :sample:javaPreCompileDebug
+> Task :sample:mergeDebugShaders
+> Task :sample:compileDebugShaders NO-SOURCE
+> Task :sample:generateDebugAssets UP-TO-DATE
+> Task :sample:mergeDebugAssets
+> Task :sample:compressDebugAssets
+> Task :sample:desugarDebugFileDependencies
+> Task :sample:checkDebugDuplicateClasses
+> Task :sample:mergeDebugJniLibFolders
+> Task :sample:mergeDebugNativeLibs NO-SOURCE
+> Task :sample:stripDebugDebugSymbols NO-SOURCE
+> Task :sample:validateSigningDebug
+> Task :sample:writeDebugAppMetadata
+> Task :sample:writeDebugSigningConfigVersions
+> Task :sample:processDebugResources
+> Task :helper:mergeExtDexDebug
+> Task :sample:mergeExtDexDebug
+> Task :lab:mergeExtDexDebug
+> Task :common:compileDebugKotlin
+> Task :common:compileDebugJavaWithJavac
+> Task :common:bundleLibRuntimeToJarDebug
+> Task :common:bundleLibCompileToJarDebug
+> Task :common:processDebugJavaRes
+> Task :common:bundleLibRuntimeToDirDebug
+> Task :lab:mergeLibDexDebug
+> Task :helper:mergeLibDexDebug
+> Task :sample:mergeLibDexDebug
+> Task :sample:compileDebugKotlin
+> Task :sample:compileDebugJavaWithJavac
+> Task :sample:dexBuilderDebug
+> Task :sample:processDebugJavaRes
+> Task :sample:mergeDebugGlobalSynthetics
+> Task :sample:mergeProjectDexDebug
+> Task :lab:compileDebugKotlin
+> Task :sample:mergeDebugJavaResource
+> Task :helper:compileDebugKotlin
+> Task :lab:compileDebugJavaWithJavac
+> Task :lab:dexBuilderDebug
+> Task :lab:mergeDebugGlobalSynthetics
+> Task :lab:processDebugJavaRes
+> Task :lab:mergeProjectDexDebug
+> Task :lab:mergeDebugJavaResource
+> Task :helper:compileDebugJavaWithJavac
+> Task :helper:dexBuilderDebug
+> Task :helper:mergeDebugGlobalSynthetics
+> Task :helper:processDebugJavaRes
+> Task :helper:mergeProjectDexDebug
+> Task :helper:mergeDebugJavaResource
+> Task :lab:packageDebug
+> Task :sample:packageDebug
+> Task :lab:createDebugApkListingFileRedirect
+> Task :helper:packageDebug
+> Task :lab:assembleDebug
+> Task :helper:createDebugApkListingFileRedirect
+> Task :helper:assembleDebug
+> Task :sample:createDebugApkListingFileRedirect
+> Task :sample:assembleDebug
+
+BUILD SUCCESSFUL in 21s
+133 actionable tasks: 133 executed
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.13/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+> Task :sample:preBuild UP-TO-DATE
+> Task :sample:preDebugBuild UP-TO-DATE
+> Task :sample:mergeDebugNativeDebugMetadata NO-SOURCE
+> Task :common:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :common:preBuild UP-TO-DATE
+> Task :common:preDebugBuild UP-TO-DATE
+> Task :common:generateDebugBuildConfig UP-TO-DATE
+> Task :common:generateDebugResValues UP-TO-DATE
+> Task :common:generateDebugResources UP-TO-DATE
+> Task :common:packageDebugResources UP-TO-DATE
+> Task :common:processDebugNavigationResources UP-TO-DATE
+> Task :common:parseDebugLocalResources UP-TO-DATE
+> Task :common:generateDebugRFile UP-TO-DATE
+> Task :common:compileDebugKotlin UP-TO-DATE
+> Task :common:javaPreCompileDebug UP-TO-DATE
+> Task :common:compileDebugJavaWithJavac UP-TO-DATE
+> Task :common:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :sample:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :sample:generateDebugBuildConfig
+> Task :common:compileDebugLibraryResources UP-TO-DATE
+> Task :common:writeDebugAarMetadata UP-TO-DATE
+> Task :sample:checkDebugAarMetadata UP-TO-DATE
+> Task :sample:processDebugNavigationResources UP-TO-DATE
+> Task :sample:compileDebugNavigationResources UP-TO-DATE
+> Task :sample:generateDebugResValues UP-TO-DATE
+> Task :sample:mapDebugSourceSetPaths UP-TO-DATE
+> Task :sample:generateDebugResources UP-TO-DATE
+> Task :sample:mergeDebugResources UP-TO-DATE
+> Task :sample:packageDebugResources UP-TO-DATE
+> Task :sample:parseDebugLocalResources UP-TO-DATE
+> Task :sample:createDebugCompatibleScreenManifests
+> Task :common:extractDeepLinksDebug UP-TO-DATE
+> Task :common:processDebugManifest UP-TO-DATE
+> Task :sample:extractDeepLinksDebug UP-TO-DATE
+> Task :sample:processDebugMainManifest
+> Task :sample:processDebugManifest
+> Task :sample:javaPreCompileDebug UP-TO-DATE
+> Task :common:mergeDebugShaders UP-TO-DATE
+> Task :common:compileDebugShaders NO-SOURCE
+> Task :common:generateDebugAssets UP-TO-DATE
+> Task :common:mergeDebugAssets UP-TO-DATE
+> Task :sample:mergeDebugShaders UP-TO-DATE
+> Task :sample:compileDebugShaders NO-SOURCE
+> Task :sample:generateDebugAssets UP-TO-DATE
+> Task :sample:mergeDebugAssets UP-TO-DATE
+> Task :sample:compressDebugAssets UP-TO-DATE
+> Task :common:bundleLibRuntimeToJarDebug UP-TO-DATE
+> Task :sample:desugarDebugFileDependencies UP-TO-DATE
+> Task :common:processDebugJavaRes UP-TO-DATE
+> Task :sample:checkDebugDuplicateClasses UP-TO-DATE
+> Task :sample:mergeExtDexDebug UP-TO-DATE
+> Task :common:bundleLibRuntimeToDirDebug UP-TO-DATE
+> Task :common:mergeDebugJniLibFolders UP-TO-DATE
+> Task :common:mergeDebugNativeLibs NO-SOURCE
+> Task :sample:mergeLibDexDebug UP-TO-DATE
+> Task :common:copyDebugJniLibsProjectOnly UP-TO-DATE
+> Task :sample:mergeDebugJniLibFolders UP-TO-DATE
+> Task :sample:mergeDebugNativeLibs NO-SOURCE
+> Task :sample:stripDebugDebugSymbols NO-SOURCE
+> Task :sample:validateSigningDebug UP-TO-DATE
+> Task :sample:writeDebugAppMetadata UP-TO-DATE
+> Task :sample:writeDebugSigningConfigVersions UP-TO-DATE
+> Task :sample:processDebugManifestForPackage
+> Task :sample:processDebugResources
+> Task :sample:compileDebugKotlin
+> Task :sample:compileDebugJavaWithJavac
+> Task :sample:dexBuilderDebug
+> Task :sample:mergeDebugGlobalSynthetics UP-TO-DATE
+> Task :sample:processDebugJavaRes UP-TO-DATE
+> Task :sample:mergeDebugJavaResource UP-TO-DATE
+> Task :sample:mergeProjectDexDebug
+> Task :sample:packageDebug
+> Task :sample:createDebugApkListingFileRedirect
+> Task :sample:assembleDebug
+
+BUILD SUCCESSFUL in 16s
+59 actionable tasks: 12 executed, 47 up-to-date
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.13/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+> Task :sample:preBuild UP-TO-DATE
+> Task :sample:preDebugBuild UP-TO-DATE
+> Task :sample:mergeDebugNativeDebugMetadata NO-SOURCE
+> Task :common:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :common:preBuild UP-TO-DATE
+> Task :common:preDebugBuild UP-TO-DATE
+> Task :common:generateDebugBuildConfig UP-TO-DATE
+> Task :common:generateDebugResValues UP-TO-DATE
+> Task :common:generateDebugResources UP-TO-DATE
+> Task :common:packageDebugResources UP-TO-DATE
+> Task :common:processDebugNavigationResources UP-TO-DATE
+> Task :common:parseDebugLocalResources UP-TO-DATE
+> Task :common:generateDebugRFile UP-TO-DATE
+> Task :common:compileDebugKotlin UP-TO-DATE
+> Task :common:javaPreCompileDebug UP-TO-DATE
+> Task :common:compileDebugJavaWithJavac UP-TO-DATE
+> Task :common:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :sample:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :sample:generateDebugBuildConfig UP-TO-DATE
+> Task :common:compileDebugLibraryResources UP-TO-DATE
+> Task :common:writeDebugAarMetadata UP-TO-DATE
+> Task :sample:checkDebugAarMetadata UP-TO-DATE
+> Task :sample:processDebugNavigationResources UP-TO-DATE
+> Task :sample:compileDebugNavigationResources UP-TO-DATE
+> Task :sample:generateDebugResValues UP-TO-DATE
+> Task :sample:mapDebugSourceSetPaths UP-TO-DATE
+> Task :sample:generateDebugResources UP-TO-DATE
+> Task :sample:mergeDebugResources UP-TO-DATE
+> Task :sample:packageDebugResources UP-TO-DATE
+> Task :sample:parseDebugLocalResources UP-TO-DATE
+> Task :sample:createDebugCompatibleScreenManifests UP-TO-DATE
+> Task :common:extractDeepLinksDebug UP-TO-DATE
+> Task :common:processDebugManifest UP-TO-DATE
+> Task :sample:extractDeepLinksDebug UP-TO-DATE
+> Task :sample:processDebugMainManifest UP-TO-DATE
+> Task :sample:processDebugManifest UP-TO-DATE
+> Task :sample:processDebugManifestForPackage UP-TO-DATE
+> Task :sample:processDebugResources UP-TO-DATE
+> Task :sample:compileDebugKotlin UP-TO-DATE
+> Task :sample:javaPreCompileDebug UP-TO-DATE
+> Task :sample:compileDebugJavaWithJavac UP-TO-DATE
+> Task :common:mergeDebugShaders UP-TO-DATE
+> Task :common:compileDebugShaders NO-SOURCE
+> Task :common:generateDebugAssets UP-TO-DATE
+> Task :common:mergeDebugAssets UP-TO-DATE
+> Task :sample:mergeDebugShaders UP-TO-DATE
+> Task :sample:compileDebugShaders NO-SOURCE
+> Task :sample:generateDebugAssets UP-TO-DATE
+> Task :sample:mergeDebugAssets UP-TO-DATE
+> Task :sample:compressDebugAssets UP-TO-DATE
+> Task :common:bundleLibRuntimeToJarDebug UP-TO-DATE
+> Task :sample:desugarDebugFileDependencies UP-TO-DATE
+> Task :sample:dexBuilderDebug UP-TO-DATE
+> Task :common:processDebugJavaRes UP-TO-DATE
+> Task :sample:mergeDebugGlobalSynthetics UP-TO-DATE
+> Task :sample:processDebugJavaRes UP-TO-DATE
+> Task :sample:mergeDebugJavaResource UP-TO-DATE
+> Task :sample:checkDebugDuplicateClasses UP-TO-DATE
+> Task :sample:mergeExtDexDebug UP-TO-DATE
+> Task :common:bundleLibRuntimeToDirDebug UP-TO-DATE
+> Task :sample:mergeProjectDexDebug UP-TO-DATE
+> Task :common:mergeDebugJniLibFolders UP-TO-DATE
+> Task :sample:mergeLibDexDebug UP-TO-DATE
+> Task :common:mergeDebugNativeLibs NO-SOURCE
+> Task :common:copyDebugJniLibsProjectOnly UP-TO-DATE
+> Task :sample:mergeDebugJniLibFolders UP-TO-DATE
+> Task :sample:mergeDebugNativeLibs NO-SOURCE
+> Task :sample:stripDebugDebugSymbols NO-SOURCE
+> Task :sample:validateSigningDebug UP-TO-DATE
+> Task :sample:writeDebugAppMetadata UP-TO-DATE
+> Task :sample:writeDebugSigningConfigVersions UP-TO-DATE
+> Task :sample:packageDebug
+> Task :sample:createDebugApkListingFileRedirect UP-TO-DATE
+> Task :sample:assembleDebug
+
+BUILD SUCCESSFUL in 9s
+59 actionable tasks: 1 executed, 58 up-to-date
+Five APK identities, API 34 policies and update signing controls verified.
