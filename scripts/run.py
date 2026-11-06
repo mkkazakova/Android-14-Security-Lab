@@ -48,11 +48,39 @@ class Runner:
  def save(self,name,value):
     path=self.current/name;path.write_text(value if isinstance(value,str) else json.dumps(value,ensure_ascii=False,indent=2));return str(path.relative_to(self.out))
 
- def screenshot(self,name):
-    result=self.adb('exec-out','screencap','-p',binary=True);path=self.current/(name+'.png');path.write_bytes(result.stdout)
-    with Image.open(path) as im:im.verify()
-    self.case['images'].append({'path':str(path.relative_to(self.out)),'caption':name,'sha256':hashlib.sha256(result.stdout).hexdigest(),'source':'adb screencap','run_id':self.run_id})
-    return path
+ 
+ def screenshot(self,name,optional=False):
+    import io
+    errors=[]
+    for attempt in range(3):
+      try:
+        result=self.adb('exec-out','screencap','-p',binary=True)
+        data=result.stdout
+        if not data.startswith(b'\x89PNG\r\n\x1a\n'):
+          raise ValueError(f'PNG signature missing, {len(data)} bytes')
+        with Image.open(io.BytesIO(data)) as image:
+          image.verify()
+        path=self.current/(name+'.png')
+        path.write_bytes(data)
+        self.case['images'].append({
+          'path':str(path.relative_to(self.out)),
+          'caption':name,
+          'sha256':hashlib.sha256(data).hexdigest(),
+          'source':'adb screencap',
+          'run_id':self.run_id
+        })
+        return path
+      except (Infrastructure,OSError,ValueError) as error:
+        errors.append(str(error))
+        time.sleep(1)
+
+    reason='Screenshot unavailable: '+'; '.join(errors)
+    if optional:
+      self.save(name+'.capture-error.txt',reason)
+      self.case.setdefault('warnings',[]).append(reason)
+      return None
+    raise Infrastructure(reason)
+
 
  def log(self):return self.adb('logcat','-d','-v','raw','-s','ASL:I','*:S')
 
@@ -283,40 +311,115 @@ class Runner:
         raise Infrastructure('Unexpected targetSdk for '+pkg)
     self.save('environment.json',self.metadata)
 
- def direct_boot(self):
-    if self.metadata['crypto_type']!='file' or self.metadata['crypto_state']!='encrypted':
-      raise Inconclusive('AVD does not report real file-based encryption; emulated FBE is not substituted')
+  def direct_boot(self):
+    if self.metadata['crypto_type'] != 'file' or self.metadata['crypto_state'] != 'encrypted':
+      raise Inconclusive(
+        'AVD does not report real file-based encryption; emulated FBE is not substituted'
+      )
 
-    before=self.call(LAB,'boot_prepare')
-    require(before['unlocked'] and before['de']['matches'] and before['ce']['matches'],'Both prepared files must be readable')
+    before = self.call(LAB, 'boot_prepare')
+    require(
+      before['unlocked'] and before['de']['matches'] and before['ce']['matches'],
+      'Both prepared files must be readable'
+    )
+
     self.screenshot('01-записи-перед-перезагрузкой')
-    token=self.case['events'][-1]['token']
+
+    self.save(
+      'package-before-reboot.txt',
+      self.adb('shell', 'dumpsys', 'package', LAB)
+    )
 
     self.adb('reboot')
-    self.adb('wait-for-device',timeout=180)
-    locked=self.event(token,'boot_receiver',timeout=150)
+    self.adb('wait-for-device', timeout=180)
 
-    require(locked['stage']=='locked_boot' and not locked['unlocked'],'Probe must execute before first unlock')
-    require(locked['de'].get('matches') and not locked['ce'].get('read') and bool(locked['ce'].get('exception')),'DE readable and actual CE exception required')
-    require(locked['boot_count']>before['boot_count'],'A real reboot is required')
+    state = self.adb('shell', 'dumpsys', 'user')
+    self.save('user-before-first-unlock.txt', state)
+
+    require(
+      'RUNNING_LOCKED' in state,
+      'Expected locked user after reboot'
+    )
+
+    self.save(
+      'package-before-first-unlock.txt',
+      self.adb('shell', 'dumpsys', 'package', LAB)
+    )
 
     self.screenshot('02-первичная-блокировка-Android')
+
     self.unlock()
     time.sleep(2)
 
-    after=self.call(LAB,'boot_probe',stage='first_unlock')
-    require(after['unlocked'] and after['de']['matches'] and after['ce']['matches'],'Original bytes must become readable after PIN')
+    # После перезагрузки Logcat может потерять события.
+    # Используем историю, сохранённую приложением в DE-хранилище.
+
+    history_result = self.call(LAB, 'boot_history')
+    history = history_result.get('history', [])
+
+    require(
+      isinstance(history, list),
+      'Boot history must be a JSON array'
+    )
+
+    self.save('boot-history-after-unlock.json', history)
+
+    locked = next(
+      (
+        entry for entry in history
+        if entry.get('stage') == 'locked_boot'
+        and entry.get('boot_count', -1) > before['boot_count']
+      ),
+      None
+    )
+
+    require(
+      locked is not None,
+      'No persisted LOCKED_BOOT_COMPLETED observation'
+    )
+
+    require(
+      not locked['unlocked'],
+      'Probe must execute before first unlock'
+    )
+
+    require(
+      locked['de'].get('matches')
+      and not locked['ce'].get('read')
+      and bool(locked['ce'].get('exception')),
+      'DE readable and actual CE exception required'
+    )
+
+    after = self.call(LAB, 'boot_probe', stage='first_unlock')
+
+    require(
+      after['unlocked']
+      and after['de']['matches']
+      and after['ce']['matches'],
+      'Original bytes must become readable after PIN'
+    )
+
     self.screenshot('03-данные-после-PIN')
 
-    self.adb('shell','input','keyevent','KEYCODE_SLEEP')
+    self.adb('shell', 'input', 'keyevent', 'KEYCODE_SLEEP')
     time.sleep(1)
-    state=self.adb('shell','dumpsys','user')
-    self.save('user-after-screen-lock.txt',state)
-    require('RUNNING_UNLOCKED' in state,'Screen lock must not return primary user to pre-first-unlock state')
+
+    state = self.adb('shell', 'dumpsys', 'user')
+    self.save('user-after-screen-lock.txt', state)
+
+    require(
+      'RUNNING_UNLOCKED' in state,
+      'Screen lock must not return primary user to pre-first-unlock state'
+    )
 
     self.unlock()
-    self.call(LAB,'boot_history')
-    self.case['conclusion']='DE доступно до первого PIN; исходная запись CE доступна после разблокировки. Повторная блокировка экрана не возвращает пользователя в Direct Boot.'
+    self.call(LAB, 'boot_history')
+
+    self.case['conclusion'] = (
+      'DE доступно до первого PIN; исходная запись CE доступна '
+      'после разблокировки. Повторная блокировка экрана '
+      'не возвращает пользователя в Direct Boot.'
+    )
 
  def keystore(self):
     # Recover independently if Direct Boot failed while keyguard stayed locked.
@@ -330,7 +433,7 @@ class Runner:
 
     t=self.launch(LAB,'key_auth')
     time.sleep(1)
-    self.screenshot('01-системный-запрос-PIN')
+    self.screenshot('01-системный-запрос-PIN',optional=True)
     self.unlock(confirmation=True)
 
     seed=self.event(t,'key_auth')
