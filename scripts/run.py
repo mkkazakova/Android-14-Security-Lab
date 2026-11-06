@@ -311,7 +311,7 @@ class Runner:
         raise Infrastructure('Unexpected targetSdk for '+pkg)
     self.save('environment.json',self.metadata)
 
-  def direct_boot(self):
+ def direct_boot(self):
     if self.metadata['crypto_type'] != 'file' or self.metadata['crypto_state'] != 'encrypted':
       raise Inconclusive(
         'AVD does not report real file-based encryption; emulated FBE is not substituted'
