@@ -216,19 +216,30 @@ class Runner:
       )
 
     else:
-      # Credential confirmation may expose an EditText instead.
-      self.tap(self.center(n))
+      root = self.dump()
+      fields = [
+        node for node in root.iter('node')
+        if pin_field(node)
+      ]
+
+      if len(fields) != 1:
+        raise Infrastructure(
+          'Cannot identify the current system PIN field'
+        )
+
+      if fields[0].get('focused') != 'true':
+        self.tap(self.center(fields[0]))
 
       for digit in self.pin:
         self.adb(
-          'shell','input','keyevent',
-          'KEYCODE_'+digit,
+          'shell', 'input', 'keyevent',
+          'KEYCODE_' + digit,
           private=True
         )
         time.sleep(.1)
 
       self.adb(
-        'shell','input','keyevent',
+        'shell', 'input', 'keyevent',
         'KEYCODE_ENTER',
         private=True
       )
@@ -333,12 +344,38 @@ class Runner:
     self.adb('reboot')
     self.adb('wait-for-device', timeout=180)
 
-    state = self.adb('shell', 'dumpsys', 'user')
+    deadline = time.monotonic() + 120
+    state = ''
+
+    while time.monotonic() < deadline:
+      booted = self.adb(
+        'shell', 'getprop', 'sys.boot_completed',
+        check=False
+      ).strip()
+
+      state = self.adb(
+        'shell', 'dumpsys', 'user',
+        check=False
+      )
+
+      if booted == '1' and (
+        'RUNNING_LOCKED' in state
+        or 'RUNNING_UNLOCKED' in state
+      ):
+        break
+
+      time.sleep(2)
+    else:
+      self.save('user-before-first-unlock.txt', state)
+      raise Infrastructure(
+        'Android did not finish booting or UserManager is unavailable'
+      )
+
     self.save('user-before-first-unlock.txt', state)
 
     require(
       'RUNNING_LOCKED' in state,
-      'Expected locked user after reboot'
+      'Android user was not locked after reboot'
     )
 
     self.save(
