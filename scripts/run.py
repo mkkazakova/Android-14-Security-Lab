@@ -341,8 +341,54 @@ class Runner:
       self.adb('shell', 'dumpsys', 'package', LAB)
     )
 
-    self.adb('reboot')
-    self.adb('wait-for-device', timeout=180)
+    
+    # Перезагрузка может временно разорвать соединение ADB.
+    try:
+      self.adb('reboot', timeout=8, check=False)
+    except Infrastructure as exc:
+      if 'TimeoutExpired' not in str(exc):
+        raise
+
+    deadline = time.monotonic() + 180
+    last_devices = ''
+
+    while time.monotonic() < deadline:
+      try:
+        last_devices = self.adb(
+          'devices', timeout=5, check=False
+        )
+
+        if 'emulator-5554\tdevice' in last_devices:
+          booted = self.adb(
+            'shell', 'getprop', 'sys.boot_completed',
+            timeout=5, check=False
+          ).strip()
+
+          count = self.adb(
+            'shell', 'settings', 'get',
+            'global', 'boot_count',
+            timeout=5, check=False
+          ).strip()
+
+          if (
+            booted == '1'
+            and count.isdigit()
+            and int(count) > int(before['boot_count'])
+          ):
+            break
+
+      except Infrastructure:
+        pass
+
+      time.sleep(3)
+
+    else:
+      self.save('reboot-adb-devices.txt', last_devices)
+      raise Infrastructure(
+        'Emulator did not return after reboot; '
+        'see reboot-adb-devices.txt'
+      )
+
 
     deadline = time.monotonic() + 120
     state = ''
