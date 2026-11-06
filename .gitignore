@@ -1,0 +1,10 @@
+.gradle/
+**/build/
+local.properties
+.idea/
+*.iml
+.kotlin/
+.lab-secrets/
+results/
+__pycache__/
+*.pyc
