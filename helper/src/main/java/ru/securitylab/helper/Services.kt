@@ -21,22 +21,57 @@ fun Service.foreground(id:Int,title:String){
  startForeground(id,Notification.Builder(this,"lab").setSmallIcon(android.R.drawable.ic_menu_view).setContentTitle(title).setContentText("Security Lab · тестовая операция").build())
 }
 class OverlayService:Service(){
- private var overlay:View?=null
- override fun onBind(i:Intent?)=null
- override fun onStartCommand(i:Intent?,flags:Int,id:Int):Int{
-  foreground(11,"Наложение другого приложения")
-  val token=i?.getStringExtra("token")?:"manual"
-  try{
-   if(overlay==null){
-    val v=TextView(this).apply{text="LAB HELPER · ЧУЖОЕ ОКНО\nОкно не принимает касания · alpha 0.9";textSize=20f;setTextColor(Color.BLACK);gravity=Gravity.CENTER;setBackgroundColor(Color.CYAN)}
-    val p=WindowManager.LayoutParams(-1,-1,WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE or WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,PixelFormat.TRANSLUCENT).apply{alpha=.9f;gravity=Gravity.TOP or Gravity.START}
-    getSystemService(WindowManager::class.java).addView(v,p);overlay=v
-   }
-   Evidence.emit(this,token,"overlay",JSONObject().put("shown",true).put("alpha",.9).put("not_touchable",true).put("type",WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY))
-  }catch(e:Exception){Evidence.emit(this,token,"overlay",Evidence.error(e).put("operation_error",true));stopSelf()}
-  return START_NOT_STICKY
- }
- override fun onDestroy(){overlay?.let{getSystemService(WindowManager::class.java).removeView(it)};overlay=null;super.onDestroy()}
+  private val overlays=mutableListOf<View>()
+  private val layerAlpha=0.65f
+  override fun onBind(i:Intent?)=null
+  private fun removeAllOverlays(){
+    val wm=getSystemService(WindowManager::class.java)
+    overlays.forEach { runCatching { wm.removeView(it) } }
+    overlays.clear()
+  }
+  override fun onStartCommand(i:Intent?,flags:Int,id:Int):Int{
+    foreground(11,"Наложения другого приложения")
+    val token=i?.getStringExtra("token")?:"manual"
+    try{
+      if(overlays.isEmpty()){
+        val wm=getSystemService(WindowManager::class.java)
+        repeat(2){ layer->
+          val v=TextView(this).apply{
+            text=if(layer==1)"LAB HELPER · ДВА ЧУЖИХ ОКНА\nКаждое окно пропускает касания · alpha 0.65" else ""
+            textSize=20f
+            setTextColor(Color.BLACK)
+            gravity=Gravity.CENTER
+            setBackgroundColor(Color.CYAN)
+          }
+          val p=WindowManager.LayoutParams(-1,-1,
+            WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
+            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE or
+              WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
+              WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,
+            PixelFormat.TRANSLUCENT).apply{
+              alpha=layerAlpha
+              gravity=Gravity.TOP or Gravity.START
+            }
+          wm.addView(v,p)
+          overlays.add(v)
+        }
+      }
+      val combined=1f-(1f-layerAlpha)*(1f-layerAlpha)
+      Evidence.emit(this,token,"overlay",JSONObject()
+        .put("shown",overlays.size==2)
+        .put("layers",overlays.size)
+        .put("alpha",layerAlpha.toDouble())
+        .put("combined_alpha",combined.toDouble())
+        .put("not_touchable",true)
+        .put("type",WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY))
+    }catch(e:Exception){
+      Evidence.emit(this,token,"overlay",Evidence.error(e).put("operation_error",true))
+      removeAllOverlays()
+      stopSelf()
+    }
+    return START_NOT_STICKY
+  }
+  override fun onDestroy(){removeAllOverlays();super.onDestroy()}
 }
 class CaptureService:Service(){
  private var projection:MediaProjection?=null
