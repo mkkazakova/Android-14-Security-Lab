@@ -80,34 +80,51 @@ class Runner:
     return token
  def call(self,pkg,op,**extras):return self.event(self.launch(pkg,op,**extras),op)
  def dump(self):
-    self.adb('shell','uiautomator','dump','/sdcard/asl-window.xml',timeout=20)
-    xml=self.adb('shell','cat','/sdcard/asl-window.xml')
+    # External storage can be unavailable before the first Android unlock.
+    # /data/local/tmp is available to the adb shell in Direct Boot.
+    path='/data/local/tmp/asl-window.xml'
+    self.adb('shell','rm','-f',path)
+    self.adb('shell','uiautomator','dump',path,timeout=25)
+    xml=self.adb('shell','cat',path)
     try:return ET.fromstring(xml)
-    except ET.ParseError as e:raise Infrastructure('UI hierarchy unavailable') from e
+    except ET.ParseError as e:raise Infrastructure('UI hierarchy unreadable at '+path) from e
  def center(self,node):
     numbers=list(map(int,re.findall(r'\d+',node.get('bounds',''))))
     if len(numbers)!=4:raise Infrastructure('Missing UI bounds')
     return ((numbers[0]+numbers[2])//2,(numbers[1]+numbers[3])//2)
  def find(self,predicate,timeout=15):
     end=time.monotonic()+timeout
+    last_error=None
     while time.monotonic()<end:
       try:
        for n in self.dump().iter('node'):
         if predicate(n):return n
-      except Infrastructure:pass
+      except Infrastructure as error:last_error=error
       time.sleep(.4)
-    raise Infrastructure('Required system UI element not found')
+    detail='; last UI dump error: '+str(last_error) if last_error else ''
+    raise Infrastructure('Required system UI element not found'+detail)
  def tap(self,xy):self.adb('shell','input','tap',*xy);time.sleep(.5)
  def unlock(self,confirmation=False):
-    # Enter credentials ONLY in observed Android keyguard/settings UI, never lab UI.
+    # PIN is entered only when an Android system credential entry is observed.
     if not self.pin:raise Infrastructure('No laboratory PIN configured')
     if not confirmation:
-      self.adb('shell','input','keyevent','KEYCODE_WAKEUP');self.adb('shell','input','swipe','360','1200','360','250','400');time.sleep(1)
-    n=self.find(lambda n:n.get('package') in ('com.android.systemui','com.android.settings') and ('pinEntry' in n.get('resource-id','') or 'password_entry' in n.get('resource-id','') or n.get('class')=='android.widget.EditText'))
+      self.adb('shell','input','keyevent','KEYCODE_WAKEUP')
+      self.adb('shell','input','swipe','360','1200','360','250','400')
+      time.sleep(1)
+    pin_field=lambda n:(n.get('package') in ('com.android.systemui','com.android.settings') and
+      ('pinEntry' in n.get('resource-id','') or 'password_entry' in n.get('resource-id','') or n.get('class')=='android.widget.EditText'))
+    try:
+      n=self.find(pin_field,timeout=6)
+    except Infrastructure:
+      if confirmation:raise
+      # Retry the keyguard bouncer: on some boots the lock screen stays visible.
+      self.adb('shell','input','keyevent','KEYCODE_MENU')
+      self.adb('shell','input','swipe','360','1200','360','250','450')
+      time.sleep(.7)
+      n=self.find(pin_field,timeout=9)
     self.tap(self.center(n))
     self.adb('shell','input','text',self.pin,private=True)
     self.adb('shell','input','keyevent','KEYCODE_ENTER',private=True)
-    # Some credential screens use a separate Next/Done button.
     time.sleep(1)
     if confirmation:
       try:
@@ -115,6 +132,13 @@ class Runner:
         if node.get('package')=='com.android.settings' and (node.get('resource-id','').endswith('/next_button') or node.get('text','').lower() in ('done','next','готово','далее')):
          self.tap(self.center(node));break
       except Infrastructure:pass
+    else:
+      # A command exit 0 is not evidence that Android accepted the PIN.
+      deadline=time.monotonic()+15
+      while time.monotonic()<deadline:
+       if 'RUNNING_UNLOCKED' in self.adb('shell','dumpsys','user'):break
+       time.sleep(.7)
+      else:raise Infrastructure('PIN input did not unlock Android user')
  def install(self,name):
     s=self.adb('install','-r',str(ROOT/'results/apk'/name),timeout=90)
     if 'Success' not in s:raise Infrastructure('Install did not report success: '+s)
