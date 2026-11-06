@@ -1,6 +1,6 @@
 """Host-side protocol. An infrastructure failure is ERROR, never protection PASS."""
 from __future__ import annotations
-import argparse, base64, hashlib, json, os, re, secrets, subprocess, time, traceback, uuid
+import argparse, base64, hashlib, json, os, re, secrets, shutil, subprocess, time, traceback, uuid
 import xml.etree.ElementTree as ET
 from pathlib import Path
 from PIL import Image
@@ -120,7 +120,19 @@ class Runner:
     if 'Success' not in s:raise Infrastructure('Install did not report success: '+s)
  def setup(self):
     self.adb('wait-for-device',timeout=120)
-    self.metadata.update({'sdk':self.adb('shell','getprop','ro.build.version.sdk').strip(),'fingerprint':self.adb('shell','getprop','ro.build.fingerprint').strip(),'crypto_type':self.adb('shell','getprop','ro.crypto.type').strip(),'crypto_state':self.adb('shell','getprop','ro.crypto.state').strip(),'selinux':self.adb('shell','getenforce').strip(),'emulator_version':self.cmd(['emulator','-version'],check=False)[:1000]})
+    # Emulator version is diagnostic metadata, not a test prerequisite.
+    emulator_executable=shutil.which('emulator')
+    if not emulator_executable:
+       for sdk_root in (os.getenv('ANDROID_SDK_ROOT'),os.getenv('ANDROID_HOME')):
+         if sdk_root and (Path(sdk_root)/'emulator'/'emulator').is_file():
+           emulator_executable=str(Path(sdk_root)/'emulator'/'emulator')
+           break
+    if emulator_executable:
+       try: emulator_version=self.cmd([emulator_executable,'-version'],check=False)[:1000]
+       except Infrastructure: emulator_version='unavailable (optional diagnostic)'
+    else:
+       emulator_version='unavailable (optional diagnostic)'
+    self.metadata.update({'sdk':self.adb('shell','getprop','ro.build.version.sdk').strip(),'fingerprint':self.adb('shell','getprop','ro.build.fingerprint').strip(),'crypto_type':self.adb('shell','getprop','ro.crypto.type').strip(),'crypto_state':self.adb('shell','getprop','ro.crypto.state').strip(),'selinux':self.adb('shell','getenforce').strip(),'emulator_version':emulator_version})
     if self.metadata['sdk']!='34':raise Infrastructure('Only API 34 protocol is approved')
     if self.metadata['selinux']!='Enforcing':raise Infrastructure('SELinux is not Enforcing')
     self.adb('shell','wm','size','720x1280');self.adb('shell','wm','density','240')
