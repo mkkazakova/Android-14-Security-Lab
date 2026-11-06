@@ -144,8 +144,13 @@ class Runner:
     self.adb('logcat','-G','16M',check=False)
     if self.group=='credentials':
       self.pin=''.join(secrets.choice('0123456789') for _ in range(6))
-      result=self.adb('shell','locksettings','set-pin',self.pin,private=True)
-      if 'success' not in result.lower():raise Infrastructure('Unable to set laboratory PIN')
+      # AOSP prints "Pin set to ..." on success, not the word "success".
+      # The command exit status is checked by self.adb(); verify the installed PIN
+      # using the platform locksettings service without logging the secret.
+      self.adb('shell','locksettings','set-pin',self.pin,private=True)
+      verification=self.adb('shell','locksettings','verify','--old',self.pin,private=True)
+      if 'verified successfully' not in verification.lower():
+        raise Infrastructure('Android did not confirm the laboratory PIN')
     installed={pkg:self.adb('shell','dumpsys','package',pkg) for pkg in (LAB,HELPER)}
     self.save('installed-packages.json',installed)
     for pkg,description in installed.items():
@@ -206,8 +211,14 @@ class Runner:
     self.tap(xy);before=self.call(LAB,'tap_state');require(before['clicks']==1 and before['saved_count']==1,'Baseline tap must save one record');self.screenshot('01-обычное-касание')
     policy=self.adb('shell','settings','get','global','block_untrusted_touches').strip()
     if policy not in ('null','2'):raise Infrastructure('Untrusted touch blocking is disabled or nondefault')
-    shown=self.call(HELPER,'overlay');require(shown.get('shown') and shown['alpha']>.8,'Untrusted overlay must exceed Android threshold')
-    time.sleep(1);overlay=self.screenshot('02-чужое-непрозрачное-окно');require(pixels(overlay,'cyan')>.25,'Actual helper window must be visible')
+    # Two independently non-touchable overlay windows. On this AVD a requested
+    # single-window alpha=0.9 was observed as alpha=0.8 (permitted pass-through).
+    # Two 0.65 layers combine to 1-(1-0.65)^2 = 0.8775, above the 0.8 threshold.
+    shown=self.call(HELPER,'overlay')
+    require(shown.get('shown') and shown.get('layers')==2 and shown.get('not_touchable') and shown.get('combined_alpha',0)>.8,'Two foreign overlay layers must exceed Android touch-occlusion threshold')
+    time.sleep(1)
+    self.save('overlay-windows-before-touch.txt',self.adb('shell','dumpsys','window',check=False))
+    overlay=self.screenshot('02-чужое-непрозрачное-окно');require(pixels(overlay,'cyan')>.25,'Actual helper windows must be visible')
     self.tap(xy);time.sleep(.5);after=self.call(LAB,'tap_state');require(after['clicks']==before['clicks'] and after['saved_count']==before['saved_count'] and after['touches']==before['touches'],'Blocked touch must not reach target Activity')
     log=self.adb('logcat','-d','-v','threadtime');self.save('input-dispatcher.txt',log)
     rejection=any(('Untrusted touch' in line or 'untrusted touch' in line) and HELPER in line for line in log.splitlines())
