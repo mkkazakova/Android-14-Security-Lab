@@ -1,0 +1,113 @@
+name: Android Security Lab — полное исследование
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: security-lab-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  experiments:
+    name: API 34 · ${{ matrix.group }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 55
+    strategy:
+      fail-fast: false
+      matrix:
+        group: [standard, credentials]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: android-actions/setup-android@v3
+      - name: Подготовка инструментов
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p results
+          python -m pip install -r scripts/requirements.txt
+          sdkmanager 'platforms;android-34' 'build-tools;35.0.0' 'platform-tools'
+          python -m unittest discover -s tests -v 2>&1 | tee results/host-tests.txt
+          bash -n scripts/build.sh
+      - name: Сборка пяти APK и проверка подписей
+        shell: bash
+        run: |
+          set -euo pipefail
+          bash scripts/build.sh 2>&1 | tee results/build.txt
+      - name: Android Lint
+        if: matrix.group == 'standard'
+        shell: bash
+        run: |
+          set -euo pipefail
+          bash gradlew --no-daemon :lab:lintDebug :helper:lintDebug :sample:lintDebug 2>&1 | tee results/lint.txt
+      - name: Доступ к аппаратному ускорению AVD
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+          test -r /dev/kvm && test -w /dev/kvm
+      - name: Шесть опытов — независимая группа ${{ matrix.group }}
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 34
+          target: google_apis
+          arch: x86_64
+          profile: pixel_2
+          cores: 2
+          ram-size: 2048M
+          heap-size: 256M
+          disk-size: 4096M
+          force-avd-creation: true
+          disable-animations: false
+          emulator-options: -no-window -gpu swiftshader -noaudio -no-boot-anim -no-snapshot -camera-back none -camera-front none
+          script: python scripts/run.py --group ${{ matrix.group }} --out results/${{ matrix.group }}
+      - name: Последняя диагностика
+        if: always()
+        shell: bash
+        run: |
+          mkdir -p results
+          python scripts/diagnostics.py --out results
+      - name: Сохранить APK, журналы и доказательства даже при ошибке
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: raw-${{ matrix.group }}
+          path: results/
+          if-no-files-found: warn
+          retention-days: 14
+  report:
+    name: Отчёт по всем шести опытам
+    needs: experiments
+    if: always()
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Получить материалы текущего запуска
+        uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          pattern: raw-*
+          path: collected
+      - name: Создать HTML, JSON и JUnit
+        run: |
+          python scripts/report.py --input collected --output report
+          cat report/summary.md >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: securitylab-report
+          path: report/
+          if-no-files-found: error
+          retention-days: 14
+      - name: Проверить полноту результата
+        run: |
+          python -c "import json; r=json.load(open('report/results.json')); assert len(r['experiments']) == 6 and all(x['status']=='PASS' for x in r['experiments']), 'Не все шесть опытов подтверждены. Скачайте securitylab-report.'"
